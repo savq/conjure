@@ -15,6 +15,16 @@
 (defn- vim-repeat [mapping]
   (.. "repeat#set(\"" (nvim.fn.escape mapping "\"") "\", 1)"))
 
+
+; TODO: Add function arguments
+(defn- create-command [cmd-name func]
+  "Create an ex-command and it's corresponding <Plug> mapping"
+  (let [cmd (.. "Conjure" cmd-name)]
+    (vim.api.nvim_command (string.format "command! :%s <cmd>lua %s<cr>" cmd func))
+    (vim.api.nvim_set_keymap :n (.. "<Plug>(" cmd ")") (.. ":" cmd)  {:silent true})))
+
+
+; TODO Understand this???
 (defn buf [mode-or-opts cmd-suffix keys ...]
   (when keys
     (let [[mode opts] (if (= :table (type mode-or-opts))
